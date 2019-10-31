@@ -23,7 +23,7 @@ var units = allUnits{
 		ID: "1",
 		Coordinates: []float64{
 			3.0609209,
-			50.6362764},
+			50.2362764},
 	},
 	{
 		ID: "2",
@@ -103,11 +103,14 @@ func deleteUnit(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.Handle("/", http.FileServer(http.Dir(".")))
+
 	router.HandleFunc("/unit", createUnit).Methods("POST")
 	router.HandleFunc("/units", getAllUnits).Methods("GET")
 	router.HandleFunc("/units/{id}", getOneUnit).Methods("GET")
 	router.HandleFunc("/units/{id}", updateUnit).Methods("PATCH")
 	router.HandleFunc("/units/{id}", deleteUnit).Methods("DELETE")
+
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
